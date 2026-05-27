@@ -12,38 +12,34 @@ description: >
 
 # ZK Creative Process
 
-Use this skill to process game-ad reference videos into clean, reviewable creative-analysis folders.
+这个 skill 用来把游戏广告参考视频整理成清晰的素材文件夹，然后基于素材做参考视频拆解、产品映射和创意方向池。
 
-Command modes:
+先跑脚本，再写分析。脚本负责视频复制、元数据、关键帧、文件夹和骨架文档；AI 负责理解画面、拆解结构、判断可迁移点和生成方向池。
 
-- `single`: one reference video, one material folder.
-- `mix`: multiple same-direction reference videos, one direction-level material folder.
+## 模式选择
 
-Both modes are code-first. Use the bundled scripts before AI writing. Prefer this skill directory's `scripts/` folder. If working inside the cloned repository, the root `scripts/` folder is equivalent. Keep human-facing files in the material root and automation files in `_system-review-系统复查资料/`.
+- `single`：一个参考视频，一个素材文件夹。
+- `mix`：多个同方向、同钩子或同批次视频，一个方向级素材文件夹。
 
-## Routing
+用户只给一个视频，或没有明确说多个视频属于同方向时，默认用 `single`。
 
-Use `single` when the user gives one new reference video or does not explicitly say the videos belong to one shared direction.
+用户说多个视频是一个方向、一个 hook 类型、一批素材、需要合并分析时，用 `mix`。
 
-Use `mix` when the user says multiple videos are one direction, one hook type, one batch, or should be analyzed together.
+## 硬规则
 
-If ambiguous, default to `single`.
+- 先运行代码生成素材结构，再做 AI 分析。
+- 默认复制源视频。只有用户明确要求移动原文件时，才使用 `--move`。
+- 参考视频和关键帧联系表放在素材文件夹根目录。
+- 产品信息放在 `product-brief-产品信息.md`。
+- 元数据、帧索引、运行清单和 AI 输入包放在 `_system-review-系统复查资料/`。
+- 产品映射必须基于 `product-brief-产品信息.md`。如果产品信息缺失或仍有 `TODO`，不要编造产品事实，只列出缺失问题，并标记产品映射待补充。
+- 第一阶段只产出故事方向池。用户选定方向前，不创建生产分镜、prompt 或 `script-*` 文件夹。
+- 区分选择和完成：选择只记录选中的方向；完成才归档和清理最终生产资产。
+- 人读的文件结论和优先级在前，细节在后。
 
-## Hard Rules
+## single 工作流
 
-- Run code setup before writing analysis.
-- Copy source videos by default. Use `--move` only when the user explicitly asks to move originals.
-- Keep original videos and keyframe contact sheets in the material root.
-- Keep product context in `product-brief-产品信息.md`.
-- Put metadata, frame index, manifest, and AI input pack in `_system-review-系统复查资料/`.
-- Use product information for product mapping. If product information is missing or still contains TODO, do not invent product facts; list missing questions and mark product mapping as pending.
-- First produce a story-direction pool. Do not create production storyboard, prompt, or `script-*` folders until the user selects a specific direction.
-- Separate selection from completion: selection records a chosen direction; completion archives and cleans final production assets.
-- Keep outputs human-readable: conclusion and priority first, details second.
-
-## single Workflow
-
-Run from the repository root, or from the installed skill's `scripts/` folder:
+在仓库根目录，或安装后的 skill `scripts/` 目录运行：
 
 ```bash
 ./scripts/process-reference-video-phase1.sh \
@@ -54,9 +50,9 @@ Run from the repository root, or from the installed skill's `scripts/` folder:
   --product-brief-path "./my-product-brief.md"
 ```
 
-`--product-brief-path` is optional. If omitted, the script creates a blank `product-brief-产品信息.md` template.
+`--product-brief-path` 可选。不传时，脚本会生成空的 `product-brief-产品信息.md` 模板。
 
-Then read:
+然后读取：
 
 - `_system-review-系统复查资料/ai-input-pack.md`
 - `_system-review-系统复查资料/frame-index.json`
@@ -64,15 +60,15 @@ Then read:
 - `keyframes-reference-storyboard-contact-sheet-*.jpg`
 - `product-brief-产品信息.md`
 
-Fill:
+需要填写：
 
 - `brief.md`
 - `outputs/reference-video-storyboard-原视频场景变化分镜.md`
 - `outputs/creative-script-directions-创意脚本方向.md`
 
-## mix Workflow
+## mix 工作流
 
-For multiple same-direction videos, create one direction folder, not multiple single folders:
+多个同方向视频要创建一个方向级文件夹，不要拆成多个单视频文件夹：
 
 ```bash
 ./scripts/process-reference-videos-mix.sh \
@@ -83,61 +79,61 @@ For multiple same-direction videos, create one direction folder, not multiple si
   --product-brief-path "./my-product-brief.md"
 ```
 
-The `brief.md` should list all videos, their shared theme, differences, transferable structure, and unified test goal.
+`brief.md` 应该说明所有视频、共性主题、差异点、可迁移结构和统一测试目标。
 
-Fill:
+需要填写：
 
 - `brief.md`
 - `product-brief-产品信息.md`
 - `outputs/shared-analysis-同方向素材共性拆解.md`
 
-## Product Mapping Requirements
+## 产品映射要求
 
-Before turning a reference structure into scripts for the user's product, check `product-brief-产品信息.md`.
+把参考结构转成用户自己产品的脚本前，先检查 `product-brief-产品信息.md`。
 
-Required product context:
+必需产品信息：
 
-- game/product category, audience, market, platform, and ad channel
-- core gameplay loop and first real user experience
-- mechanics that can truthfully bridge from the hook into gameplay
-- available visual assets and production constraints
-- must-show, must-avoid, compliance limits, and success metric
+- 产品或游戏品类、受众、市场、平台和投放渠道
+- 核心玩法循环和前 30 秒真实体验
+- 能真实连接 hook 与玩法的机制
+- 可用视觉资产和制作限制
+- 必须展示、必须避免、合规限制和成功指标
 
-If these are missing, output a concise missing-information checklist. Keep the reference-video deconstruction useful, but do not claim the product mapping is complete.
+如果这些信息缺失，输出简短的缺失信息清单。参考视频拆解可以继续完成，但不要声称产品映射已完成。
 
-## Output Requirements
+## 输出要求
 
-For both modes, analyze:
+两种模式都要分析：
 
-- scene progression
-- opening hook
-- conflict and pressure
-- visual language and edit rhythm
-- BGM, SFX, voice, and captions when available
-- transferable structure versus surface style
-- bridge into actual gameplay or product value
+- 场景推进
+- 开头 hook
+- 冲突和压力来源
+- 视觉语言和剪辑节奏
+- BGM、音效、旁白和字幕
+- 可迁移结构与不可照搬的表层风格
+- 如何桥接到真实玩法或产品价值
 
-Each story direction should include:
+每个故事方向应包含：
 
-- core hypothesis
+- 核心假设
 - hook
-- story premise
-- conflict and trigger mechanism
-- product bridge
-- product mapping fit and missing product information
-- scalable variants
-- metrics to test
-- risks
-- human decision questions
+- 故事前提
+- 冲突和触发机制
+- 产品桥接
+- 产品映射适配度和缺失信息
+- 可扩展变体
+- 测试指标
+- 风险
+- 需要人决策的问题
 
-## Completion Checks
+## 收尾检查
 
-Before responding:
+回复前确认：
 
-- Confirm mode used: `single` or `mix`.
-- Confirm code setup ran before AI writing.
-- Confirm material folder path.
-- Confirm `_system-review-系统复查资料/` contains metadata, frame index, manifest, and AI input pack.
-- Confirm root contains reference video, keyframe sheet, brief, product brief, and outputs.
-- Confirm whether product mapping is complete or pending due to missing product information.
-- Confirm no production folder was created before a direction was selected.
+- 使用的是 `single` 还是 `mix`。
+- 已先运行代码生成素材结构，再做 AI 写作。
+- 素材文件夹路径明确。
+- `_system-review-系统复查资料/` 包含元数据、帧索引、运行清单和 AI 输入包。
+- 根目录包含参考视频、关键帧联系表、`brief.md`、产品 brief 和 `outputs/`。
+- 产品映射是已完成，还是因为产品信息缺失而待补充。
+- 用户选方向前，没有创建生产文件夹。
