@@ -1,5 +1,6 @@
 .tmp/
 creative-materials/
+.planning/
 *.mp4
 !shower.mp4
 *.mov
