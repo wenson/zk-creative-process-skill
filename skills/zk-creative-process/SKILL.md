@@ -32,7 +32,7 @@ If ambiguous, default to `single`.
 ## Hard Rules
 
 - Run code setup before writing analysis.
-- Copy source videos by default. Use `-Move` only when the user explicitly asks to move originals.
+- Copy source videos by default. Use `--move` only when the user explicitly asks to move originals.
 - Keep original videos and keyframe contact sheets in the material root.
 - Keep product context in `product-brief-产品信息.md`.
 - Put metadata, frame index, manifest, and AI input pack in `_system-review-系统复查资料/`.
@@ -45,16 +45,16 @@ If ambiguous, default to `single`.
 
 Run from the repository root, or from the installed skill's `scripts/` folder:
 
-```powershell
-.\scripts\process-reference-video-phase1.ps1 `
-  -VideoPath "C:\path\to\reference.mp4" `
-  -Slug "short-slug" `
-  -Name "english-name-中文说明" `
-  -BaseDir ".\creative-materials" `
-  -ProductBriefPath ".\my-product-brief.md"
+```bash
+./scripts/process-reference-video-phase1.sh \
+  --video-path "/Users/me/Videos/reference.mp4" \
+  --slug "short-slug" \
+  --name "english-name-中文说明" \
+  --base-dir "./creative-materials" \
+  --product-brief-path "./my-product-brief.md"
 ```
 
-`-ProductBriefPath` is optional. If omitted, the script creates a blank `product-brief-产品信息.md` template.
+`--product-brief-path` is optional. If omitted, the script creates a blank `product-brief-产品信息.md` template.
 
 Then read:
 
@@ -74,13 +74,13 @@ Fill:
 
 For multiple same-direction videos, create one direction folder, not multiple single folders:
 
-```powershell
-.\scripts\process-reference-videos-mix.ps1 `
-  -VideoPaths "C:\path\to\video-1.mp4","C:\path\to\video-2.mp4" `
-  -Slug "shared-direction" `
-  -Name "shared-direction-同方向说明" `
-  -BaseDir ".\creative-materials" `
-  -ProductBriefPath ".\my-product-brief.md"
+```bash
+./scripts/process-reference-videos-mix.sh \
+  --video-paths "/Users/me/Videos/video-1.mp4" "/Users/me/Videos/video-2.mp4" \
+  --slug "shared-direction" \
+  --name "shared-direction-同方向说明" \
+  --base-dir "./creative-materials" \
+  --product-brief-path "./my-product-brief.md"
 ```
 
 The `brief.md` should list all videos, their shared theme, differences, transferable structure, and unified test goal.

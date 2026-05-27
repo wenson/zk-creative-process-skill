@@ -1,6 +1,6 @@
 # ZK Creative Process Skill
 
-A Codex skill and PowerShell toolkit for processing game-ad reference videos into clean creative-analysis folders.
+A Codex skill and cross-platform toolkit for processing game-ad reference videos into clean creative-analysis folders.
 
 Core workflow:
 
@@ -32,57 +32,56 @@ creative-materials/YYYY-MM-DD-slug-name/
 
 Run from this repository root:
 
-```powershell
-.\scripts\install-skill.ps1
+```bash
+./scripts/install-skill.sh
 ```
 
 If the skill already exists, the installer stops. Choose explicitly:
 
-```powershell
-.\scripts\install-skill.ps1 -Backup
-.\scripts\install-skill.ps1 -Force
+```bash
+./scripts/install-skill.sh --backup
+./scripts/install-skill.sh --force
 ```
 
-`-Backup` keeps the old installed skill. `-Force` replaces it.
+`--backup` keeps the old installed skill. `--force` replaces it.
 
 ## Use In Codex
 
 Single reference video:
 
 ```text
-用 $zk-creative-process single 处理这个视频：C:\path\to\video.mp4
+用 $zk-creative-process single 处理这个视频：/Users/me/Videos/video.mp4
 ```
 
 Same-direction batch:
 
 ```text
-用 $zk-creative-process mix 把这几个同方向视频合并分析：C:\path\to\video-1.mp4, C:\path\to\video-2.mp4
+用 $zk-creative-process mix 把这几个同方向视频合并分析：/Users/me/Videos/video-1.mp4, /Users/me/Videos/video-2.mp4
 ```
 
-The scripts copy source videos by default. Originals stay where they are. Use `-Move` only when you deliberately want originals moved into the material folder.
+The scripts copy source videos by default. Originals stay where they are. Use `--move` only when you deliberately want originals moved into the material folder.
 
 ## Requirements
 
-- PowerShell 7+ recommended.
-- FFmpeg and FFprobe available on PATH, or pass `-FfmpegPath` and `-FfprobePath`.
+- Python 3.10+.
+- FFmpeg and FFprobe available on PATH, or pass `--ffmpeg-path` and `--ffprobe-path`.
 
 Check environment:
 
-```powershell
-.\scripts\check-environment.ps1
+```bash
+./scripts/check-environment.sh
 ```
 
 Validate generated material:
 
-```powershell
-.\scripts\check-creative-material.ps1 -MaterialDir ".\creative-materials\YYYY-MM-DD-slug-name"
+```bash
+./scripts/check-creative-material.sh --material-dir "./creative-materials/YYYY-MM-DD-slug-name"
 ```
 
-Validate skill metadata on Windows:
+Validate skill metadata:
 
-```powershell
-$env:PYTHONUTF8='1'
-python "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" .\skills\zk-creative-process
+```bash
+PYTHONUTF8=1 python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" ./skills/zk-creative-process
 ```
 
 ## Docs
