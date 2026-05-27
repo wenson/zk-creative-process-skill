@@ -2,7 +2,7 @@
 
 ## Scope
 
-This repository packages the `zk-creative-process` Codex skill and its PowerShell helper scripts.
+This repository packages the `zk-creative-process` Codex skill and its cross-platform helper scripts.
 
 ## Structure
 
@@ -15,7 +15,8 @@ This repository packages the `zk-creative-process` Codex skill and its PowerShel
 ## Rules
 
 - Keep the install path friendly for non-programmers: one installer command, clear next step, no silent destructive behavior.
-- Default file handling must copy source videos. Moving originals requires an explicit `-Move` flag.
+- Default file handling must copy source videos. Moving originals requires an explicit move flag.
+- Keep macOS/Linux docs focused on native `.sh` entry points. Keep Windows notes available through `.ps1` commands where useful.
 - Do not commit source videos, generated `creative-materials/`, private ad data, or strategy notes.
 - Keep `README.md` as the entry guide. Put longer explanations in `docs/`.
-- Validate PowerShell syntax after script changes.
+- Validate shell syntax after `.sh` changes and PowerShell syntax after `.ps1` changes.
