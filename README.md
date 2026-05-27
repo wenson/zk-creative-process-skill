@@ -146,6 +146,10 @@ PYTHONUTF8=1 python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_val
 - [单视频示例](examples/single/README.md)
 - [多视频示例](examples/mix/README.md)
 
+## 致谢
+
+感谢原作者 [ZK-JackUltra/zk-creative-process-skill](https://github.com/ZK-JackUltra/zk-creative-process-skill) 提供的创意流程基础。
+
 ## 隐私与提交边界
 
 - 不要提交客户视频、竞品视频、广告数据、产品策略、已填写的产品 brief 或生成的 `creative-materials/`。
