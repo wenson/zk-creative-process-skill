@@ -1,10 +1,10 @@
 # Troubleshooting
 
-## FFmpeg Not Found
+## 找不到 FFmpeg
 
-The scripts need both `ffmpeg` and `ffprobe`.
+脚本需要同时找到 `ffmpeg` 和 `ffprobe`。
 
-Install options:
+安装方式：
 
 ```bash
 brew install ffmpeg
@@ -18,7 +18,7 @@ winget install Gyan.FFmpeg
 sudo apt install ffmpeg
 ```
 
-If FFmpeg is installed but not on PATH, pass explicit paths:
+如果已经安装，但不在 PATH 里，可以传完整路径：
 
 ```bash
 ./scripts/process-reference-video-phase1.sh \
@@ -30,72 +30,85 @@ If FFmpeg is installed but not on PATH, pass explicit paths:
   --ffprobe-path "/opt/homebrew/bin/ffprobe"
 ```
 
-## PowerShell Script Execution Is Disabled
+## Windows 禁止执行脚本
 
-If Windows blocks script execution, run PowerShell as your normal user and set:
+如果 Windows 阻止执行 PowerShell 脚本，用普通用户打开 PowerShell，然后运行：
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
-Or run one command with bypass on Windows PowerShell:
+也可以只对单次命令绕过执行策略：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File ./scripts/check-environment.ps1
 ```
 
-## Paths With Spaces Or Non-English Characters
+## 路径里有空格或中文
 
-Use quoted paths:
+路径要加引号：
 
 ```bash
--VideoPath "/Users/me/Videos/test video.mp4"
+--video-path "/Users/me/Videos/test video 中文.mp4"
 ```
 
-The scripts use literal filesystem paths internally and should support spaces and non-English characters.
+脚本内部使用真实文件路径，应该支持空格和中文路径。
 
-## Skill Validation Fails On Windows Encoding
+## skill 校验遇到编码错误
 
-If `quick_validate.py` fails with a `UnicodeDecodeError`, enable UTF-8 for that terminal session:
+如果 `quick_validate.py` 报 `UnicodeDecodeError`，在当前终端启用 UTF-8：
 
 ```bash
 PYTHONUTF8=1 python "$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py" ./skills/zk-creative-process
 ```
 
-This repository intentionally uses Chinese filenames in generated analysis files, so UTF-8 validation is expected.
+本仓库会生成中文文件名，所以校验时使用 UTF-8 是正常要求。
 
-## Source Video Disappeared
+## 源视频不见了
 
-Current scripts copy source videos by default. Originals stay in their original folder.
+当前脚本默认复制源视频。原视频会留在原文件夹。
 
-If a source video was moved, check whether the command used `--move`. That flag deliberately moves originals into the generated material folder.
+只有命令里用了 `--move`，脚本才会把原视频移动到生成的素材文件夹。
 
-## Long Videos Are Slow
+## 长视频处理很慢
 
-The default extracts 12 selected frames plus intermediate frames. For very long videos, first trim to the ad segment or lower the frame count:
+默认会抽取一组均匀分布的关键帧。长视频可以先剪到广告片段，或降低帧数：
 
 ```bash
 --storyboard-frames 8
 ```
 
-## Output Contains TODO
+`single` 默认 12 帧，`mix` 默认每个视频 8 帧。可设置范围是 4 到 30。
 
-This is expected immediately after script setup. The script creates skeleton files. Codex should then fill:
+## 输出里还有 TODO
 
-- `product-brief-产品信息.md`
+这是脚本刚生成后的正常状态。脚本只创建骨架文件，后续要由 Codex 填写。
+
+`single` 需要填写：
+
+- `brief.md`
 - `outputs/reference-video-storyboard-原视频场景变化分镜.md`
 - `outputs/creative-script-directions-创意脚本方向.md`
 
-For a `mix` folder, Codex should fill:
+`mix` 需要填写：
 
+- `brief.md`
 - `outputs/shared-analysis-同方向素材共性拆解.md`
 
-## Product Mapping Looks Generic
+如果 `product-brief-产品信息.md` 仍有 `TODO`，产品映射必须标记为待补充。
 
-Fill `product-brief-产品信息.md` or pass an existing file with `--product-brief-path`.
+## 产品映射看起来很泛
 
-Without product context, Codex should only deconstruct the reference video and list missing product questions. It should not invent gameplay, assets, audience, or compliance constraints.
+先填写 `product-brief-产品信息.md`，或通过 `--product-brief-path` 传入已有产品 brief。
 
-## Do Not Commit Generated Materials
+没有产品上下文时，Codex 只能拆解参考视频并列出缺失问题。它不应该编造玩法、资产、受众或合规限制。
 
-Generated folders may include source videos and derived frames. Keep them out of git. This repository's `.gitignore` already ignores `creative-materials/`, `.tmp/`, and common video file extensions.
+## 不要提交生成素材
+
+生成目录可能包含源视频和派生图片，不要提交到 git。
+
+仓库的 `.gitignore` 已经忽略：
+
+- `creative-materials/`
+- `.tmp/`
+- 常见视频文件格式

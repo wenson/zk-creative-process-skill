@@ -1,8 +1,8 @@
 # Mix Example
 
-Use `mix` when several videos share the same creative direction.
+`mix` 用于多个同方向视频。它会生成一个方向级素材文件夹，用来分析共性、差异和统一测试目标。
 
-Run:
+运行：
 
 ```bash
 ./scripts/process-reference-videos-mix.sh \
@@ -13,12 +13,18 @@ Run:
   --product-brief-path "./my-product-brief.md"
 ```
 
-`--product-brief-path` is optional. If omitted, fill the generated `product-brief-产品信息.md` before asking Codex to map the shared direction into your own product.
+`--product-brief-path` 可选。不传时，先填写生成的 `product-brief-产品信息.md`，再让 Codex 把共性方向映射到自己的产品。
 
-Then ask Codex:
+然后让 Codex 继续：
 
 ```text
 $zk-creative-process mix ./creative-materials/2026-05-23-animal-hooks-动物钩子
 ```
 
-The output should be one direction-level folder, not three independent single-video folders.
+预期输出重点：
+
+- 一个方向级文件夹。
+- 每个视频一张关键帧联系表。
+- `outputs/shared-analysis-同方向素材共性拆解.md` 作为共享分析。
+
+不要把同方向素材拆成多个独立 `single` 文件夹。
